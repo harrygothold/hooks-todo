@@ -1,22 +1,20 @@
-import uuidv4 from 'uuid/v4';
-
 export default function reducer(state, action) {
     switch (action.type) {
+        case "GET_TODOS":
+            return {
+                ...state,
+                todos: action.payload
+            }
         case "ADD_TODO":
-            if (!action.payload) {
-                alert('Please enter some text');
-                return state;
-            }
-            if (state.todos.findIndex(t => t.text === action.payload) > -1) {
-                alert('This To do already exists');
-                return state;
-            }
-            const newTodo = {
-                id: uuidv4(),
-                text: action.payload,
-                complete: false
-            }
-            const addedTodos = [...state.todos, newTodo]
+            // if (!action.payload) {
+            //     alert('Please enter some text');
+            //     return state;
+            // }
+            // if (state.todos.findIndex(t => t.text === action.payload) > -1) {
+            //     alert('This To do already exists');
+            //     return state;
+            // }
+            const addedTodos = [...state.todos, action.payload]
             return {
                 ...state,
                 todos: addedTodos
@@ -28,21 +26,21 @@ export default function reducer(state, action) {
             }
         case 'TOGGLE_TODO':
             const toggleTodos = state.todos.map(t =>
-                t.id === action.payload.id ? { ...action.payload, complete: !action.payload.complete } : t);
+                t.id === action.payload.id ? action.payload : t);
             return {
                 ...state,
                 todos: toggleTodos
             }
         case "UPDATE_TODO":
-            if (!action.payload) {
-                alert('Please enter some text');
-                return state;
-            }
-            if (state.todos.findIndex(t => t.text === action.payload) > -1) {
-                alert('Could not be updated. Cannot be the same as previous todo');
-                return state;
-            }
-            const updatedTodo = { ...state.currentTodo, text: action.payload }
+            // if (!action.payload) {
+            //     alert('Please enter some text');
+            //     return state;
+            // }
+            // if (state.todos.findIndex(t => t.text === action.payload) > -1) {
+            //     alert('Could not be updated. Cannot be the same as previous todo');
+            //     return state;
+            // }
+            const updatedTodo = { ...action.payload }
             const updatedTodoIndex = state.todos.findIndex(t => t.id === state.currentTodo.id)
             const updatedTodos = [
                 ...state.todos.slice(0, updatedTodoIndex),

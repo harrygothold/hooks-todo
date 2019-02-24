@@ -1,5 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import TodosContext from '../context';
+import uuidv4 from 'uuid/v4';
+import Axios from 'axios';
 const TodoForm = () => {
     const [todo, setTodo] = useState("");
     const { state: { currentTodo = {} }, dispatch } = useContext(TodosContext);
@@ -12,12 +14,20 @@ const TodoForm = () => {
     }, [currentTodo.id])
 
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
         if (currentTodo.text) {
-            dispatch({ type: "UPDATE_TODO", payload: todo })
+            const response = Axios.patch(`https://todos-api-nddiunpfpl.now.sh/todos/${currentTodo.id}`, {
+                text: todo
+            })
+            dispatch({ type: "UPDATE_TODO", payload: response.data })
         } else {
-            dispatch({ type: "ADD_TODO", payload: todo });
+            const response = await Axios.post(`https://todos-api-nddiunpfpl.now.sh/todos`, {
+                id: uuidv4(),
+                text: todo,
+                complete: false
+            })
+            dispatch({ type: "ADD_TODO", payload: response.data });
         }
         setTodo("");
 
